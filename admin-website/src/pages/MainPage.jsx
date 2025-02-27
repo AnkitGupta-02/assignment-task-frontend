@@ -4,7 +4,6 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header.jsx";
 import Navbar from "../components/Header/NavBar/NavBar.jsx";
 import DashBoardTab from "../components/tabs/DashBoardTab.jsx";
-// import ResearchTab from "../components/tabs/ResearchTab.jsx";
 import ServiceManager from "../components/tabs/ServiceTab/ServicesManager.jsx";
 import ProductManager from "../components/tabs/ProductTab/ProductManager.jsx";
 import ResearchManager from "../components/tabs/ResearchTab/ResearchManager.jsx";

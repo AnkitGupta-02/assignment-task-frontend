@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ResearchCard from './Cards/ResearchCard';
 import { getResearch } from "../../apis/getData-api";
+import socket from "../../socket";
 
 function ResearchTab() {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +16,15 @@ function ResearchTab() {
 
   useEffect(() => {
     fetchData();
+
+    // Listen for real-time updates from WebSocket
+    socket.on("refreshData", () => {
+      fetchData(); // Refresh data when an update occurs
+    });
+
+    return () => {
+      socket.off("refreshData"); // Cleanup on unmount
+    };
   }, [fetchData]);
 
   

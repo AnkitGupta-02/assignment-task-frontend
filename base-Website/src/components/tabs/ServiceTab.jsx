@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ServiceCard from "./Cards/ServiceCard";
 import { getService } from "../../apis/getData-api";
+import socket from "../../socket";
 
 const ServicesTab = () => {
   const [data, setData] = useState([]);
@@ -20,7 +21,21 @@ const ServicesTab = () => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+
+    // Listen for real-time updates from WebSocket
+    socket.on("refreshData", (data) => {
+      // console.log(data);
+      // fetchData(); // Refresh data when an update occurs
+
+      console.log("Received data update:", data);
+      // Update your UI accordingly
+      setData(data); // Or fetch new data here
+    });
+
+    return () => {
+      socket.off("refreshData"); // Cleanup on unmount
+    };
+  }, []);
 
   return (
     <div className="container p-6 mx-auto">

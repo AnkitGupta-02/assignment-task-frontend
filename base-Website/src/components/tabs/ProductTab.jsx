@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { getProduct } from "../../apis/getData-api";
 import ProductCard from "./Cards/ProductCard";
+import socket from "../../socket";
 
 function ProductTab() {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,8 +16,16 @@ function ProductTab() {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
 
+    // Listen for real-time updates from WebSocket
+    socket.on("refreshData", () => {
+      fetchData(); // Refresh data when an update occurs
+    });
+
+    return () => {
+      socket.off("refreshData"); // Cleanup on unmount
+    };
+  }, [fetchData]);
   
   return (
     <div className="container p-6 mx-auto">

@@ -4,10 +4,9 @@ import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 function App() {
-
   return (
     <BrowserRouter>
-      <ToastContainer position="bottom-right"/>
+      <ToastContainer position="bottom-right" />
       <Router />
     </BrowserRouter>
   );

@@ -1,8 +1,13 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import Card from "../common/Card";
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import Card from "../../common/Card";
+import Profile from "./Profile/Profile";
+import { logout } from "../../../apis/Admin-api";
 
-function Navbar() {
+function Navbar({ data }) {
+  const navigate = useNavigate();
+
   const path = [
     { label: "Home", href: "/", active: useLocation().pathname === "/" },
     {
@@ -22,6 +27,16 @@ function Navbar() {
     },
   ];
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success("logout Successful", { autoClose: 2000 });
+      navigate("/login");
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
   return (
     <nav className="flex items-center px-6 py-4 bg-slate-300">
       <div className="w-full ">
@@ -29,6 +44,7 @@ function Navbar() {
           <Card key={item.label} {...item} />
         ))}
       </div>
+      <Profile username={data?.username} onLogout={handleLogout} />
     </nav>
   );
 }

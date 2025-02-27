@@ -1,5 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Card, CardContent, Typography, Button,Box } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  CardActions,
+} from "@mui/material";
 import { getResearch } from "../../apis/Research-api";
 
 function ResearchTab() {
@@ -32,7 +39,7 @@ function ResearchTab() {
           </Typography>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             size="small"
             href={data.doi}
             target="_blank"
@@ -41,6 +48,14 @@ function ResearchTab() {
             Read More
           </Button>
         </CardContent>
+        <CardActions>
+          <Button size="small" variant="contained" color="primary">
+            Edit
+          </Button>
+          <Button size="small" variant="contained" color="error">
+            Delete
+          </Button>
+        </CardActions>
       </Card>
     );
   };
@@ -50,14 +65,25 @@ function ResearchTab() {
       {isLoading ? (
         "Loading..."
       ) : (
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "flex-start", mt: 2 }}>
-        {data.map((service, index) => (
-          <Box key={index} sx={{ width: { xs: "100%", sm: "48%", md: "30%" } }}>
-            <ResearchCard data={service} />
-          </Box>
-        ))}
-      </Box>
-  )}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 3,
+            justifyContent: "flex-start",
+            mt: 2,
+          }}
+        >
+          {data.map((service, index) => (
+            <Box
+              key={index}
+              sx={{ width: { xs: "100%", sm: "48%", md: "30%" } }}
+            >
+              <ResearchCard data={service} />
+            </Box>
+          ))}
+        </Box>
+      )}
     </div>
   );
 }

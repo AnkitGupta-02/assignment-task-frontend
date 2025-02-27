@@ -7,7 +7,7 @@ import Input from "../common/Input";
 import Button from "../common/Button";
 import Loading from "../common/Loading";
 
-import { loginAdmin } from "../../Services/admin-api";
+import { loginAdmin } from "../../apis/Admin-api";
 
 function LoginForm() {
   const [isLoading, setIsLoading ] = useState(false);
@@ -60,8 +60,8 @@ function LoginForm() {
             onChange={handleChange}
             placeholder="Enter password"
           />
-          <div className="flex items-center justify-between">
-            <Link className="pr-3 text-blue-500">Forget?</Link>
+          <div className="flex items-center justify-between ">
+            <Link className="px-3 text-blue-500">Forget?</Link>
           </div>
           <Button
             className={`text-lg border-none text-white rounded-md bg-[#2A2D34] flex items-center justify-center ${

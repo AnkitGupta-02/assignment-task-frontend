@@ -2,12 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Header from "../components/Header/Header.jsx";
-import Navbar from "../components/Header/Navbar/Navbar.jsx";
+import Navbar from "../components/Header/NavBar/NavBar.jsx";
 import DashBoardTab from "../components/tabs/DashBoardTab.jsx";
-import ProductTab from "../components/tabs/ProductTab.jsx";
-import ResearchTab from "../components/tabs/ResearchTab.jsx";
-import ServiceTab from "../components/tabs/ServiceTab.jsx";
-import { fetchAdmin } from "../Services/admin-api.jsx";
+// import ResearchTab from "../components/tabs/ResearchTab.jsx";
+import ServiceManager from "../components/tabs/ServiceTab/ServicesManager.jsx";
+import ProductManager from "../components/tabs/ProductTab/ProductManager.jsx";
+import ResearchManager from "../components/tabs/ResearchTab/ResearchManager.jsx";
+import { fetchAdmin } from "../apis/Admin-api.jsx";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -47,9 +48,9 @@ function MainPage() {
       </Header>
       <Routes>
         <Route index element={<DashBoardTab />} />
-        <Route path="/services" element={<ServiceTab />} />
-        <Route path="/products" element={<ProductTab />} />
-        <Route path="/research" element={<ResearchTab />} />
+        <Route path="/services" element={<ServiceManager />} />
+        <Route path="/products" element={<ProductManager />} />
+        <Route path="/research" element={<ResearchManager />} />
       </Routes>
     </div>
   );

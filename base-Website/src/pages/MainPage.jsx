@@ -9,7 +9,7 @@ import ServiceTab from "../components/tabs/ServiceTab.jsx";
 
 function MainPage() {
   return (
-    <div className="w-full h-full border">
+    <div className="min-h-screen">
       <NavBar />
       <Routes>
         <Route index element={<DashBoardTab />} />

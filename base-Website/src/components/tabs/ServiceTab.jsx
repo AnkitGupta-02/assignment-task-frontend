@@ -1,79 +1,42 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  Card,
-  CardContent,
-  Chip,
-  Box,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; 
+import ServiceCard from "./Cards/ServiceCard";
 import { getService } from "../../apis/getData-api";
 
-function ServiceTab() {
-  const [isLoading, setIsLoading] = useState(false);
+const ServicesTab = () => {
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
-    const list = await getService();
-    setIsLoading(false);
-    setData(list);
+    try {
+      const list = await getService();
+      setData(list);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  const ServiceCard = ({ service }) => {
-    return (
-      <Card sx={{ width: "100%", boxShadow: 3, p: 2 }}>
-        <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            {service.category}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
-            {service.description}
-          </Typography>
-  
-          {service.sub_services.map((subService, index) => (
-            <Accordion key={index} sx={{ boxShadow: 1 }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography variant="subtitle1">{subService.name}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography variant="body2">{subService.description}</Typography>
-                {subService.technologies && (
-                  <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 1 }}>
-                    {subService.technologies.map((tech, i) => (
-                      <Chip key={i} label={tech} variant="outlined" />
-                    ))}
-                  </Box>
-                )}
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </CardContent>
-      </Card>
-    );
-  };
-
   return (
-    <div className="h-screen px-5">
-      {isLoading ? (
-        "Loading..."
-      ) : (
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, justifyContent: "flex-start", mt: 2 }}>
-        {data.map((service, index) => (
-          <Box key={index} sx={{ width: { xs: "100%", sm: "48%", md: "30%" } }}>
-            <ServiceCard service={service} />
-          </Box>
+    <div className="container p-6 mx-auto">
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+          <div className="text-xl font-semibold">Loading...</div>
+        </div>
+      )}
+      {/* Services Grid */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {data?.map((service, index) => (
+          <ServiceCard key={index} service={service} />
         ))}
-      </Box>
-  )}
+      </div>
     </div>
   );
-}
-export default ServiceTab;
+};
+
+export default ServicesTab;

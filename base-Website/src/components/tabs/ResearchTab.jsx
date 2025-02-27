@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ResearchCard from './Cards/ResearchCard';
 import { getResearch } from "../../apis/getData-api";
-import socket from "../../socket";
+import io from "socket.io-client";
+const socket = io("http://localhost:8000"); // Connect to backend
 
 function ResearchTab() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,18 +17,39 @@ function ResearchTab() {
 
   useEffect(() => {
     fetchData();
+  }, [fetchData]);
 
-    // Listen for real-time updates from WebSocket
-    socket.on("refreshData", () => {
-      fetchData(); // Refresh data when an update occurs
+ // Listen for real-time updates
+   useEffect(() => {
+    socket.on("research-updated", (updatedResearch) => {
+      setData((prevResearch) => {
+        const existingResearchIndex = prevResearch.findIndex(
+          (s) => s._id === updatedResearch._id
+        );
+        if (existingResearchIndex !== -1) {
+          // Update existing research
+          const updatedResearch = [...prevResearch];
+          updatedResearch[existingResearchIndex] = updatedResearch;
+          return updatedResearch;
+        } else {
+          // Add new research
+          return [...prevResearch, updatedResearch];
+        }
+      });
+    });
+
+    socket.on("research-deleted", (deletedResearchId) => {
+      setData((prevResearch) =>
+        prevResearch.filter((s) => s._id !== deletedResearchId)
+      );
     });
 
     return () => {
-      socket.off("refreshData"); // Cleanup on unmount
+      socket.off("research-updated");
+      socket.off("research-deleted");
     };
-  }, [fetchData]);
+  }, []);
 
-  
   return (
     <div className="container p-6 mx-auto">
     {isLoading && (

@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ServiceCard from "./Cards/ServiceCard";
 import { getService } from "../../apis/getData-api";
-import socket from "../../socket";
+import io from "socket.io-client";
+const socket = io("http://localhost:8000"); // Connect to backend
 
 const ServicesTab = () => {
   const [data, setData] = useState([]);
@@ -21,21 +22,39 @@ const ServicesTab = () => {
 
   useEffect(() => {
     fetchData();
+  }, [fetchData]);
 
-    // Listen for real-time updates from WebSocket
-    socket.on("refreshData", (data) => {
-      // console.log(data);
-      // fetchData(); // Refresh data when an update occurs
+   // Listen for real-time updates
+   useEffect(() => {
+    socket.on("service-updated", (updatedService) => {
+      setData((prevServices) => {
+        const existingServiceIndex = prevServices.findIndex(
+          (s) => s._id === updatedService._id
+        );
+        if (existingServiceIndex !== -1) {
+          // Update existing service
+          const updatedServices = [...prevServices];
+          updatedServices[existingServiceIndex] = updatedService;
+          return updatedServices;
+        } else {
+          // Add new service
+          return [...prevServices, updatedService];
+        }
+      });
+    });
 
-      console.log("Received data update:", data);
-      // Update your UI accordingly
-      setData(data); // Or fetch new data here
+    socket.on("service-deleted", (deletedServiceId) => {
+      setData((prevServices) =>
+        prevServices.filter((s) => s._id !== deletedServiceId)
+      );
     });
 
     return () => {
-      socket.off("refreshData"); // Cleanup on unmount
+      socket.off("service-updated");
+      socket.off("service-deleted");
     };
   }, []);
+
 
   return (
     <div className="container p-6 mx-auto">

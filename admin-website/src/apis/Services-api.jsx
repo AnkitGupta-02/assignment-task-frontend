@@ -1,5 +1,4 @@
 import axios from "axios";
-import socket from "../socket";
 const baseURL = "http://localhost:8000/api";
 
 export const getService = async () => {
@@ -20,7 +19,6 @@ export const createService = async (value = {}) => {
       },
     }
   );
-  socket.emit("updateData")
   return response;
 };
 
@@ -28,7 +26,6 @@ export const updateService = async (id, value = {}) => {
   const response = await axios.put(baseURL + "/services/" + id, value, {
     withCredentials: true,
   });
-  socket.emit("updateData")
   return response;
 };
 
@@ -36,6 +33,5 @@ export const deleteService = async (id) => {
   const response = await axios.delete(`${baseURL}/services/${id}`, {
     withCredentials: true,
   });
-  socket.emit("updateData")
   return response;
 };
